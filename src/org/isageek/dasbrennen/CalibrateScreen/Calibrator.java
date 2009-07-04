@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 public class Calibrator implements OnTouchListener {
 	/* These are the "screen" (240x320) coordinates of the targets */
-	private final int TL_X = 17;
-	private final int TL_Y = 41;
-	private final int BR_X = 216;
-	private final int BR_Y = 304;
+	private final int TL_X = 75;
+	private final int TL_Y = 99;
+	private final int BR_X = 149;
+	private final int BR_Y = 249;
 	
 	private Context ctx;
 	
@@ -93,7 +93,7 @@ public class Calibrator implements OnTouchListener {
 			Toast t = Toast.makeText(ctx, msg, duration);
 			t.show();
 		}
-		int duration = Toast.LENGTH_LONG;
+		int duration = Toast.LENGTH_SHORT;
 		CharSequence msg = "read " + String.valueOf(val);
 		Toast t = Toast.makeText(ctx, msg, duration);
 		t.show();
@@ -111,7 +111,7 @@ public class Calibrator implements OnTouchListener {
 			Toast t = Toast.makeText(ctx, msg, duration);
 			t.show();
 		}
-		int duration = Toast.LENGTH_LONG;
+		int duration = Toast.LENGTH_SHORT;
 		CharSequence msg = "write " + String.valueOf(val);
 		Toast t = Toast.makeText(ctx, msg, duration);
 		t.show();
@@ -149,6 +149,9 @@ public class Calibrator implements OnTouchListener {
 		CharSequence msg = "Recalibrated!";
 		Toast t = Toast.makeText(ctx, msg, duration);
 		t.show();
+		
+		topleft = null;
+		bottomright = null;
 	}
 
 }

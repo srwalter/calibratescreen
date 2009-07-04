@@ -25,12 +25,12 @@ public class CalibrateScreen extends Activity {
         /* Draw the "targets" */
         ShapeDrawable sd1 = new ShapeDrawable(new OvalShape());
         sd1.getPaint().setColor(0xffff0000);
-        sd1.setBounds(10,10,20,20);
+        sd1.setBounds(100,100,110,110);
         l[0] = sd1;
         
         ShapeDrawable sd2 = new ShapeDrawable(new OvalShape());
         sd2.getPaint().setColor(0xffff0000);
-        sd2.setBounds(290,400,300,410);
+        sd2.setBounds(200,320,210,330);
         l[1] = sd2;
         
         dv = new DrawableView(this, l);
