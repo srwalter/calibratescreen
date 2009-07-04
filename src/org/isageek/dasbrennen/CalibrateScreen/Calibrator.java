@@ -1,5 +1,6 @@
 package org.isageek.dasbrennen.CalibrateScreen;
 
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -101,9 +102,9 @@ public class Calibrator implements OnTouchListener {
 	
 	private void setSysfs(String filename, int val) {
 		try {
-			FileWriter f = new FileWriter(filename);
-			f.write(String.valueOf(val));
-			f.write("\n");
+			BufferedWriter f = new BufferedWriter(new FileWriter(filename));
+			f.write(String.valueOf(val) + "\n");
+			f.flush();
 		} catch (IOException e) {
 			int duration = Toast.LENGTH_LONG;
 			CharSequence msg = "write fail!";
