@@ -7,8 +7,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
@@ -20,6 +22,17 @@ public class CalibrateScreen extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        Display d = wm.getDefaultDisplay();
+        if (d.getWidth() != 320 || d.getHeight() != 480) {
+    		int duration = Toast.LENGTH_LONG;
+    		CharSequence msg = "Must be run at 320x480!";
+    		Toast t = Toast.makeText(this, msg, duration);
+    		t.show();
+    		return;
+        }
+        
         ShapeDrawable l[] = new ShapeDrawable[2];
         
         /* Draw the "targets" */

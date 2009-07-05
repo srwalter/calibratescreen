@@ -93,10 +93,10 @@ public class Calibrator implements OnTouchListener {
 			Toast t = Toast.makeText(ctx, msg, duration);
 			t.show();
 		}
-		int duration = Toast.LENGTH_SHORT;
-		CharSequence msg = "read " + String.valueOf(val);
-		Toast t = Toast.makeText(ctx, msg, duration);
-		t.show();
+		//int duration = Toast.LENGTH_SHORT;
+		//CharSequence msg = "read " + String.valueOf(val);
+		//Toast t = Toast.makeText(ctx, msg, duration);
+		//t.show();
 		return val;
 	}
 	
@@ -111,10 +111,10 @@ public class Calibrator implements OnTouchListener {
 			Toast t = Toast.makeText(ctx, msg, duration);
 			t.show();
 		}
-		int duration = Toast.LENGTH_SHORT;
-		CharSequence msg = "write " + String.valueOf(val);
-		Toast t = Toast.makeText(ctx, msg, duration);
-		t.show();
+		//int duration = Toast.LENGTH_SHORT;
+		//CharSequence msg = "write " + String.valueOf(val);
+		//Toast t = Toast.makeText(ctx, msg, duration);
+		//t.show();
 	}
 	
 	private void recalibrate() {
