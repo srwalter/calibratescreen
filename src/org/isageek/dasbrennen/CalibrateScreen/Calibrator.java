@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -39,7 +40,7 @@ public class Calibrator implements OnTouchListener {
 		float x = event.getRawX();
 		float y = event.getRawY();
 		
-		int duration = Toast.LENGTH_LONG;
+		int duration = Toast.LENGTH_SHORT;
 		CharSequence msg = "touch " + String.valueOf(x) + " " + String.valueOf(y);
 		Toast t = Toast.makeText(ctx, msg, duration);
 		t.show();
@@ -91,7 +92,7 @@ public class Calibrator implements OnTouchListener {
 			int duration = Toast.LENGTH_LONG;
 			CharSequence msg = "read fail!";
 			Toast t = Toast.makeText(ctx, msg, duration);
-			t.show();
+			//t.show();
 		}
 		//int duration = Toast.LENGTH_SHORT;
 		//CharSequence msg = "read " + String.valueOf(val);
@@ -109,7 +110,7 @@ public class Calibrator implements OnTouchListener {
 			int duration = Toast.LENGTH_LONG;
 			CharSequence msg = "write fail!";
 			Toast t = Toast.makeText(ctx, msg, duration);
-			t.show();
+			//t.show();
 		}
 		//int duration = Toast.LENGTH_SHORT;
 		//CharSequence msg = "write " + String.valueOf(val);
@@ -134,6 +135,10 @@ public class Calibrator implements OnTouchListener {
 		setSysfs("/sys/class/vogue_ts/xmin", cmm.new_min);
 		setSysfs("/sys/class/vogue_ts/xmax", cmm.new_max);
 		
+		CalibrationValues cv = new CalibrationValues ();
+		cv.xmin = cmm.new_min;
+		cv.xmax = cmm.new_max;
+		
 		/* Compute YMIN and YMAX */
 		int ymin = getSysfs("/sys/class/vogue_ts/ymin");
 		int ymax = getSysfs("/sys/class/vogue_ts/ymax");
@@ -144,6 +149,22 @@ public class Calibrator implements OnTouchListener {
 		
 		setSysfs("/sys/class/vogue_ts/ymin", cmm.new_min);
 		setSysfs("/sys/class/vogue_ts/ymax", cmm.new_max);
+		
+		cv.ymin = cmm.new_min;
+		cv.ymax = cmm.new_max;
+		
+		CalibrateDBAdapter adapter = new CalibrateDBAdapter(ctx);
+		try {
+			adapter.open();
+			adapter.setValues(cv);
+			adapter.close();
+		} catch (SQLiteException e) {
+			int duration = Toast.LENGTH_LONG;
+			CharSequence msg = "Unable to save values " + e.toString();
+			Toast t = Toast.makeText(ctx, msg, duration);
+			t.show();
+			return;
+		}
 		
 		int duration = Toast.LENGTH_LONG;
 		CharSequence msg = "Recalibrated!";
