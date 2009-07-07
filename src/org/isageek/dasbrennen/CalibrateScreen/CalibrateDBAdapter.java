@@ -57,10 +57,14 @@ public class CalibrateDBAdapter {
 	}
 	
 	public CalibrationValues getValues () {
-		Cursor c = db.query("data", new String [] {"xmin", "xmax", "ymin", "ymax"}, "*",
+		Cursor c = db.query("data", new String [] {"xmin", "xmax", "ymin", "ymax"}, null,
 				null, null, null, null);
 		
+		if (c.getCount() < 1)
+			return null;
+		
 		CalibrationValues cv = new CalibrationValues();
+		c.moveToFirst();
 		cv.xmin = c.getInt(0);
 		cv.xmax = c.getInt(1);
 		cv.ymin = c.getInt(2);

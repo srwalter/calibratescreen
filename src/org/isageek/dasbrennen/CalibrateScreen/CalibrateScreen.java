@@ -32,6 +32,7 @@ public class CalibrateScreen extends Activity {
 	public boolean onOptionsItemSelected (MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:
+			RestoreCalibration.restore(this);
 			return true;
 		case 2:
 			Intent i = new Intent(Intent.ACTION_RUN);

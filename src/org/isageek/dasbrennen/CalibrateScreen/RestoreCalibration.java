@@ -12,7 +12,10 @@ public class RestoreCalibration extends BroadcastReceiver {
 		// XXX
 		//if (intent.getAction() != android.content.Intent.ACTION_BOOT_COMPLETED)
 		//	return;
-		
+		restore (context);
+	}
+	
+	public static void restore (Context context) {
 		CalibrateDBAdapter db = new CalibrateDBAdapter(context);
 		CalibrationValues cv = null;
 		
@@ -23,6 +26,14 @@ public class RestoreCalibration extends BroadcastReceiver {
 		} catch (SQLiteException e) {
 			int duration = Toast.LENGTH_LONG;
 			CharSequence msg = "Unable to read values " + e.toString();
+			Toast t = Toast.makeText(context, msg, duration);
+			t.show();
+			return;
+		}
+		
+		if (cv == null) {
+			int duration = Toast.LENGTH_LONG;
+			CharSequence msg = "Unable to read values: null return ";
 			Toast t = Toast.makeText(context, msg, duration);
 			t.show();
 			return;
