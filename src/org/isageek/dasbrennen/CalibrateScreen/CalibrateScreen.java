@@ -39,7 +39,7 @@ public class CalibrateScreen extends Activity {
         sd1.getPaint().setColor(0xffff0000);
         int x = d.getWidth()/4;
         int y = d.getHeight()/4;
-        sd1.setBounds(x, y, (int)(x+dotsize), (int)(y+dotsize));
+        sd1.setBounds((int)(x-dotsize/2), (int)(y-dotsize/2), (int)(x+dotsize/2), (int)(y+dotsize/2));
         l[0] = sd1;
         
         ShapeDrawable sd2 = new ShapeDrawable(new OvalShape());
