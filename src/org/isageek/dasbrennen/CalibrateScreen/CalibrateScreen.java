@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.database.sqlite.SQLiteException;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
@@ -26,6 +27,7 @@ public class CalibrateScreen extends Activity {
 	public boolean onCreateOptionsMenu (Menu menu) {
 		menu.add(0, 1, 0, "Restore saved values");
 		menu.add(0, 2, 0, "Run pointer location");
+		menu.add(0, 3, 0, "Save current values");
 		return true;
 	}
 	
@@ -34,10 +36,26 @@ public class CalibrateScreen extends Activity {
 		case 1:
 			RestoreCalibration.restore(this);
 			return true;
+			
 		case 2:
 			Intent i = new Intent(Intent.ACTION_RUN);
 			i.setClassName("com.android.development", "com.android.development.PointerLocation");
 			this.startActivity(i);
+			return true;
+			
+		case 3:
+			CalibrateDBAdapter adapter = new CalibrateDBAdapter(this);
+			try {
+				adapter.open();
+				CalibrationValues cv = CalibrationValues.createFromSysfs();
+				adapter.setValues(cv);
+				adapter.close();
+			} catch (SQLiteException e) {
+				int duration = Toast.LENGTH_LONG;
+				CharSequence msg = "Unable to save values " + e.toString();
+				Toast t = Toast.makeText(this, msg, duration);
+				t.show();
+			}
 			return true;
 		}
 		return false;

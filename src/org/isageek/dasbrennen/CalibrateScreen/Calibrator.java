@@ -85,26 +85,7 @@ public class Calibrator implements OnTouchListener {
 			new_max = (int)(m * max + b);
 		}
 	}
-	
-	private int getSysfs(String filename) {
-		int val = 0;
-		try {
-			FileReader f = new FileReader(filename);
-			Scanner s = new Scanner(f);
-			val = s.nextInt();
-		} catch (IOException e) {
-			int duration = Toast.LENGTH_LONG;
-			CharSequence msg = "read fail!";
-			Toast t = Toast.makeText(ctx, msg, duration);
-			t.show();
-		}
-		//int duration = Toast.LENGTH_SHORT;
-		//CharSequence msg = "read " + String.valueOf(val);
-		//Toast t = Toast.makeText(ctx, msg, duration);
-		//t.show();
-		return val;
-	}
-	
+
 	private void recalibrate() {
 		if (topleft == null)
 			return;
@@ -112,8 +93,9 @@ public class Calibrator implements OnTouchListener {
 			return;
 		
 		/* Compute XMIN and XMAX */
-		int xmin = getSysfs("/sys/class/vogue_ts/xmin");
-		int xmax = getSysfs("/sys/class/vogue_ts/xmax");
+		CalibrationValues old_cv = CalibrationValues.createFromSysfs();
+		int xmin = old_cv.xmin;
+		int xmax = old_cv.xmax;
 		
 		topleft.x = topleft.x * 240 / width;
 		bottomright.x = bottomright.x * 240 / width;
@@ -124,8 +106,8 @@ public class Calibrator implements OnTouchListener {
 		cv.xmax = cmm.new_max;
 		
 		/* Compute YMIN and YMAX */
-		int ymin = getSysfs("/sys/class/vogue_ts/ymin");
-		int ymax = getSysfs("/sys/class/vogue_ts/ymax");
+		int ymin = old_cv.ymin;
+		int ymax = old_cv.ymax;
 		
 		topleft.y = topleft.y * 320 / height;
 		bottomright.y = bottomright.y * 320 / height;
@@ -134,19 +116,6 @@ public class Calibrator implements OnTouchListener {
 		cv.ymin = cmm.new_min;
 		cv.ymax = cmm.new_max;
 		cv.writeToSysfs();
-		
-		CalibrateDBAdapter adapter = new CalibrateDBAdapter(ctx);
-		try {
-			adapter.open();
-			adapter.setValues(cv);
-			adapter.close();
-		} catch (SQLiteException e) {
-			int duration = Toast.LENGTH_LONG;
-			CharSequence msg = "Unable to save values " + e.toString();
-			Toast t = Toast.makeText(ctx, msg, duration);
-			t.show();
-			return;
-		}
 		
 		int duration = Toast.LENGTH_LONG;
 		CharSequence msg = "Recalibrated!";
