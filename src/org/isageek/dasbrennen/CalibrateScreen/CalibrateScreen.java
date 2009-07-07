@@ -3,11 +3,15 @@ package org.isageek.dasbrennen.CalibrateScreen;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +22,25 @@ import android.widget.Toast;
 
 public class CalibrateScreen extends Activity {
 	DrawableView dv;
+	
+	public boolean onCreateOptionsMenu (Menu menu) {
+		menu.add(0, 1, 0, "Restore saved values");
+		menu.add(0, 2, 0, "Run pointer location");
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected (MenuItem item) {
+		switch (item.getItemId()) {
+		case 1:
+			return true;
+		case 2:
+			Intent i = new Intent(Intent.ACTION_RUN);
+			i.setClassName("com.android.development", "com.android.development.PointerLocation");
+			this.startActivity(i);
+			return true;
+		}
+		return false;
+	}
 	
     /** Called when the activity is first created. */
     @Override
