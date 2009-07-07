@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 public class Calibrator implements OnTouchListener {
 	/* These are the "screen" (240x320) coordinates of the targets */
-	private final int TL_X = 79;
-	private final int TL_Y = 96;
-	private final int BR_X = 157;
-	private final int BR_Y = 253;
+	private final int TL_X = 60;
+	private final int TL_Y = 80;
+	private final int BR_X = 180;
+	private final int BR_Y = 240;
 	
 	private Context ctx;
+	private int width;
+	private int height;
 	
 	private class XY {
 		public int x;
@@ -29,8 +31,10 @@ public class Calibrator implements OnTouchListener {
 	XY topleft;
 	XY bottomright;
 	
-	public Calibrator (Context ctx) {
+	public Calibrator (Context ctx, int width, int height) {
 		this.ctx = ctx;
+		this.width = width;
+		this.height = height;
 		
 		topleft = null;
 		bottomright = null;
@@ -49,9 +53,9 @@ public class Calibrator implements OnTouchListener {
 		coord.x = (int) x;
 		coord.y = (int) y;
 		
-		if (x < 160 && y < 240) {
+		if (x < width/2 && y < height/2) {
 			this.topleft = coord;
-		} else if (x > 160 && y > 240) {
+		} else {
 			this.bottomright = coord;
 		}
 		recalibrate();
@@ -92,30 +96,13 @@ public class Calibrator implements OnTouchListener {
 			int duration = Toast.LENGTH_LONG;
 			CharSequence msg = "read fail!";
 			Toast t = Toast.makeText(ctx, msg, duration);
-			//t.show();
+			t.show();
 		}
 		//int duration = Toast.LENGTH_SHORT;
 		//CharSequence msg = "read " + String.valueOf(val);
 		//Toast t = Toast.makeText(ctx, msg, duration);
 		//t.show();
 		return val;
-	}
-	
-	private void setSysfs(String filename, int val) {
-		try {
-			BufferedWriter f = new BufferedWriter(new FileWriter(filename));
-			f.write(String.valueOf(val) + "\n");
-			f.flush();
-		} catch (IOException e) {
-			int duration = Toast.LENGTH_LONG;
-			CharSequence msg = "write fail!";
-			Toast t = Toast.makeText(ctx, msg, duration);
-			//t.show();
-		}
-		//int duration = Toast.LENGTH_SHORT;
-		//CharSequence msg = "write " + String.valueOf(val);
-		//Toast t = Toast.makeText(ctx, msg, duration);
-		//t.show();
 	}
 	
 	private void recalibrate() {
@@ -128,13 +115,10 @@ public class Calibrator implements OnTouchListener {
 		int xmin = getSysfs("/sys/class/vogue_ts/xmin");
 		int xmax = getSysfs("/sys/class/vogue_ts/xmax");
 		
-		topleft.x = topleft.x * 240 / 320;
-		bottomright.x = bottomright.x * 240 / 320;
+		topleft.x = topleft.x * 240 / width;
+		bottomright.x = bottomright.x * 240 / width;
 		ComputeMinMax cmm = new ComputeMinMax(xmin, xmax, topleft.x, bottomright.x, TL_X, BR_X, 240);
-		
-		setSysfs("/sys/class/vogue_ts/xmin", cmm.new_min);
-		setSysfs("/sys/class/vogue_ts/xmax", cmm.new_max);
-		
+			
 		CalibrationValues cv = new CalibrationValues ();
 		cv.xmin = cmm.new_min;
 		cv.xmax = cmm.new_max;
@@ -143,15 +127,13 @@ public class Calibrator implements OnTouchListener {
 		int ymin = getSysfs("/sys/class/vogue_ts/ymin");
 		int ymax = getSysfs("/sys/class/vogue_ts/ymax");
 		
-		topleft.y = topleft.y * 320 / 480;
-		bottomright.y = bottomright.y * 320 / 480;
+		topleft.y = topleft.y * 320 / height;
+		bottomright.y = bottomright.y * 320 / height;
 		cmm = new ComputeMinMax(ymin, ymax, topleft.y, bottomright.y, TL_Y, BR_Y, 320);
-		
-		setSysfs("/sys/class/vogue_ts/ymin", cmm.new_min);
-		setSysfs("/sys/class/vogue_ts/ymax", cmm.new_max);
 		
 		cv.ymin = cmm.new_min;
 		cv.ymax = cmm.new_max;
+		cv.writeToSysfs();
 		
 		CalibrateDBAdapter adapter = new CalibrateDBAdapter(ctx);
 		try {

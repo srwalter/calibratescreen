@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
@@ -23,31 +24,33 @@ public class CalibrateScreen extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        						  WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);        
         Display d = wm.getDefaultDisplay();
-        if (d.getWidth() != 320 || d.getHeight() != 480) {
-    		int duration = Toast.LENGTH_LONG;
-    		CharSequence msg = "Must be run at 320x480!";
-    		Toast t = Toast.makeText(this, msg, duration);
-    		t.show();
-    		return;
-        }
         
         ShapeDrawable l[] = new ShapeDrawable[2];
         
         /* Draw the "targets" */
+        float dotsize = 5 * 240 / d.getWidth();
         ShapeDrawable sd1 = new ShapeDrawable(new OvalShape());
         sd1.getPaint().setColor(0xffff0000);
-        sd1.setBounds(100,100,110,110);
+        int x = d.getWidth()/4;
+        int y = d.getHeight()/4;
+        sd1.setBounds(x, y, (int)(x+dotsize), (int)(y+dotsize));
         l[0] = sd1;
         
         ShapeDrawable sd2 = new ShapeDrawable(new OvalShape());
         sd2.getPaint().setColor(0xffff0000);
-        sd2.setBounds(200,320,210,330);
+        x = d.getWidth()*3/4;
+        y = d.getHeight()*3/4;
+        sd2.setBounds(x, y, (int)(x+dotsize), (int)(y+dotsize));
         l[1] = sd2;
         
         dv = new DrawableView(this, l);
-        Calibrator c = new Calibrator(this);
+        Calibrator c = new Calibrator(this, d.getWidth(), d.getHeight());
         dv.setOnTouchListener(c);
         setContentView(dv);
     }
