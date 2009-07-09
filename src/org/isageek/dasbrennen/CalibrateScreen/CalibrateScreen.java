@@ -21,8 +21,10 @@ import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
-public class CalibrateScreen extends Activity {
-	DrawableView dv;
+public class CalibrateScreen extends Activity implements OnCalibrateListener {
+	private DrawableView dv;
+	private boolean have_calibrated;
+	private CalibrationValues saved_cv;
 	
 	public boolean onCreateOptionsMenu (Menu menu) {
 		menu.add(0, 1, 0, "Undo");
@@ -36,6 +38,7 @@ public class CalibrateScreen extends Activity {
 		switch (item.getItemId()) {
 		case 1:
 			RestoreCalibration.restore(this);
+			have_calibrated = true;
 			return true;
 			
 		case 2:
@@ -45,6 +48,9 @@ public class CalibrateScreen extends Activity {
 			return true;
 			
 		case 3:
+			if (!have_calibrated)
+				return true;
+			
 			CalibrateDBAdapter adapter = new CalibrateDBAdapter(this);
 			try {
 				adapter.open();
@@ -62,6 +68,7 @@ public class CalibrateScreen extends Activity {
 		case 4:
 			CalibrationValues cv = CalibrationValues.createFromDefaults();
 			cv.writeToSysfs();
+			have_calibrated = true;
 			return true;
 		}
 		
@@ -72,6 +79,8 @@ public class CalibrateScreen extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        have_calibrated = false;
         
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -100,7 +109,30 @@ public class CalibrateScreen extends Activity {
         
         dv = new DrawableView(this, l);
         Calibrator c = new Calibrator(this, d.getWidth(), d.getHeight());
+        c.setOnCalibrateListener(this);
         dv.setOnTouchListener(c);
         setContentView(dv);
     }
+    
+    public void onPause() {
+    	super.onPause();
+    	
+    	if (!have_calibrated) {
+    		saved_cv.writeToSysfs();
+    	}
+    }
+    
+    public void onResume() {
+    	super.onResume();
+    	
+    	saved_cv = CalibrationValues.createFromSysfs();
+    	have_calibrated = false;
+   		// Set unrestrictive calibration values
+   		CalibrationValues cv = CalibrationValues.createMaxed();
+   		cv.writeToSysfs();
+    }
+
+	public void onCalibrate() {
+		have_calibrated = true;
+	}
 }

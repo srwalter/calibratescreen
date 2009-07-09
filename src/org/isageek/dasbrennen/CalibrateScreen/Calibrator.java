@@ -20,6 +20,8 @@ public class Calibrator implements OnTouchListener {
 	private final int BR_X = 180;
 	private final int BR_Y = 240;
 	
+	protected OnCalibrateListener cb;
+	
 	private Context ctx;
 	private int width;
 	private int height;
@@ -35,9 +37,14 @@ public class Calibrator implements OnTouchListener {
 		this.ctx = ctx;
 		this.width = width;
 		this.height = height;
+		this.cb = null;
 		
 		topleft = null;
 		bottomright = null;
+	}
+	
+	public void setOnCalibrateListener (OnCalibrateListener l) {
+		this.cb = l;
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -116,6 +123,9 @@ public class Calibrator implements OnTouchListener {
 		cv.ymin = cmm.new_min;
 		cv.ymax = cmm.new_max;
 		cv.writeToSysfs();
+		
+		if (this.cb != null)
+			this.cb.onCalibrate();
 		
 		int duration = Toast.LENGTH_LONG;
 		CharSequence msg = "Recalibrated!";
