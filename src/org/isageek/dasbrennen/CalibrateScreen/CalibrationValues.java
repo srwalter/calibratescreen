@@ -47,6 +47,24 @@ public class CalibrationValues {
 		return cv;
 	}
 	
+	public static CalibrationValues createFromDefaults() {
+		CalibrationValues cv = new CalibrationValues();
+		cv.xmin = 687;
+		cv.xmax = 3551;
+		cv.ymin = 335;
+		cv.ymax = 3823;
+		return cv;
+	}
+	
+	public static CalibrationValues createMaxed() {
+		CalibrationValues cv = new CalibrationValues();
+		cv.xmin = 0;
+		cv.xmax = 4000;
+		cv.ymin = 0;
+		cv.ymax = 4000;
+		return cv;
+	}
+	
 	private static int getSysfs(String filename) {
 		int val = 0;
 		try {

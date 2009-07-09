@@ -25,9 +25,10 @@ public class CalibrateScreen extends Activity {
 	DrawableView dv;
 	
 	public boolean onCreateOptionsMenu (Menu menu) {
-		menu.add(0, 1, 0, "Restore saved values");
-		menu.add(0, 2, 0, "Run pointer location");
-		menu.add(0, 3, 0, "Save current values");
+		menu.add(0, 1, 0, "Undo");
+		menu.add(0, 2, 0, "Test Calibration");
+		menu.add(0, 4, 0, "Defaults");
+		menu.add(0, 3, 0, "Save");
 		return true;
 	}
 	
@@ -57,7 +58,13 @@ public class CalibrateScreen extends Activity {
 				t.show();
 			}
 			return true;
+		
+		case 4:
+			CalibrationValues cv = CalibrationValues.createFromDefaults();
+			cv.writeToSysfs();
+			return true;
 		}
+		
 		return false;
 	}
 	
