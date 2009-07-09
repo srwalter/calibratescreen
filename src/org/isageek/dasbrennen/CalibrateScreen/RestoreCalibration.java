@@ -9,9 +9,6 @@ import android.widget.Toast;
 public class RestoreCalibration extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// XXX
-		//if (intent.getAction() != android.content.Intent.ACTION_BOOT_COMPLETED)
-		//	return;
 		restore (context);
 	}
 	
@@ -27,7 +24,7 @@ public class RestoreCalibration extends BroadcastReceiver {
 			int duration = Toast.LENGTH_LONG;
 			CharSequence msg = "Unable to read values " + e.toString();
 			Toast t = Toast.makeText(context, msg, duration);
-			t.show();
+			//t.show();
 			return;
 		}
 		
@@ -43,7 +40,7 @@ public class RestoreCalibration extends BroadcastReceiver {
 		int duration = Toast.LENGTH_LONG;
 		CharSequence msg = "Boot recalibrated!";
 		Toast t = Toast.makeText(context, msg, duration);
-		t.show();
+		//t.show();
 	}
 
 }
