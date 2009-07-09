@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 public class Calibrator implements OnTouchListener {
 	/* These are the "screen" (240x320) coordinates of the targets */
-	private final int TL_X = 60;
-	private final int TL_Y = 80;
-	private final int BR_X = 180;
-	private final int BR_Y = 240;
+	private final int TL_X = 24;
+	private final int TL_Y = 32;
+	private final int BR_X = 216;
+	private final int BR_Y = 288;
 	
 	protected OnCalibrateListener cb;
 	

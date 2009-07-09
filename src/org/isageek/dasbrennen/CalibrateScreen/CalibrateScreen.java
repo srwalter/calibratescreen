@@ -95,15 +95,15 @@ public class CalibrateScreen extends Activity implements OnCalibrateListener {
         float dotsize = 5 * 240 / d.getWidth();
         ShapeDrawable sd1 = new ShapeDrawable(new OvalShape());
         sd1.getPaint().setColor(0xffff0000);
-        int x = d.getWidth()/4;
-        int y = d.getHeight()/4;
+        int x = d.getWidth()/10;
+        int y = d.getHeight()/10;
         sd1.setBounds((int)(x-dotsize/2), (int)(y-dotsize/2), (int)(x+dotsize/2), (int)(y+dotsize/2));
         l[0] = sd1;
         
         ShapeDrawable sd2 = new ShapeDrawable(new OvalShape());
         sd2.getPaint().setColor(0xffff0000);
-        x = d.getWidth()*3/4;
-        y = d.getHeight()*3/4;
+        x = d.getWidth()*9/10;
+        y = d.getHeight()*9/10;
         sd2.setBounds(x, y, (int)(x+dotsize), (int)(y+dotsize));
         l[1] = sd2;
         
